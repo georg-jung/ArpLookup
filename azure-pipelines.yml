@@ -28,9 +28,14 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    arguments: '-c Release --output $(Build.ArtifactStagingDirectory)/ArpLookup'
+    arguments: '-c Release --output $(Build.ArtifactStagingDirectory)/ArpLookup-publish'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack'
+    arguments: '-c Release --output $(Build.ArtifactStagingDirectory)/ArpLookup-nupkg'
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/ArpLookup'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
   
