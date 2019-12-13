@@ -8,6 +8,7 @@
     <Authors>Georg Jung</Authors>
     <PackageProjectUrl>https://github.com/georg-jung/ArpLookup</PackageProjectUrl>
     <RepositoryUrl>https://github.com/georg-jung/ArpLookup</RepositoryUrl>
+    <Version>0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
