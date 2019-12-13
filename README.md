@@ -43,6 +43,17 @@ Per default, the library waits for ping responses for up to 750ms on linux platf
 Arp.LinuxPingTimeout = TimeSpan.FromMilliseconds(125);
 ```
 
+## Supported platforms
+
+* Windows (tested)
+* Linux
+  * Debian (tested)
+  * Android
+  * **not** WSL 1 (tested)
+  * [WSL 2](https://github.com/Microsoft/WSL/issues/2279)
+
+Note that the used method does not work in WSL 1 and might not work on every linux distribution. Checking the `Arp.IsSupported` property accounts for this (though it does not check if you are actually allowed to access `/proc/net/arp`). In WSL 2 this library will work as on most "real" linux distributions as [this issue describes](https://github.com/Microsoft/WSL/issues/2279). While I did not test this library on Android/Xamarin I have read in different places that reading `/proc/net/arp` is possible (given the right permissions).
+
 ## Credits
 
 The windows version is based on [nikeee/wake-on-lan](https://github.com/nikeee/wake-on-lan).
