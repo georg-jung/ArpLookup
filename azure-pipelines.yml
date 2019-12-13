@@ -28,9 +28,9 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: false
-    arguments: '-c Release --output $(Build.ArtifactStagingDirectory)'
+    arguments: '-c Release --output $(Build.ArtifactStagingDirectory)/ArpLookup'
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)'
+    targetPath: '$(Build.ArtifactStagingDirectory)/ArpLookup'
   
