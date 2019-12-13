@@ -3,12 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageId>ArpLookup</PackageId>
     <Authors>Georg Jung</Authors>
-    <PackageProjectUrl>https://github.com/georg-jung/ArpLookup</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/georg-jung/ArpLookup</RepositoryUrl>
     <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/georg-jung/ArpLookup</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/georg-jung/ArpLookup</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageDescription>A .Net Standard 2.0 library supporting ARP lookups on Windows and Linux to find the MAC address corresponding to an IP address.</PackageDescription>
+    <PackageTags>arp mac mac-address arp-cache ip ip-address hardware-address physical-address linux</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
