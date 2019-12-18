@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" viewBox="0 0 24 24">
+  <circle cx="11" cy="11" r="8"/>
+  <path d="M21 21l-4.35-4.35"/>
+  <path d="M14.926 9.677h-.788V8.89a.264.264 0 00-.263-.263h-.789v-.789a.264.264 0 00-.263-.263h-3.68a.264.264 0 00-.263.263v.789h-.789a.264.264 0 00-.262.263v.788h-.79a.264.264 0 00-.262.263v3.68c0 .145.118.263.263.263h1.314V11.78h.526v2.103h1.052V11.78h.525v2.103h1.052V11.78h.526v2.103h1.051V11.78h.526v2.103h1.314a.264.264 0 00.263-.263V9.94a.264.264 0 00-.263-.263z" fill="#244ba3" stroke="none"/>
+</svg>
