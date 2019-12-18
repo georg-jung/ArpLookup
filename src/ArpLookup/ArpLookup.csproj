@@ -9,14 +9,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <RepositoryUrl>https://github.com/georg-jung/ArpLookup.git</RepositoryUrl>
-	<RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/georg-jung/ArpLookup</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageDescription>A .Net Standard 2.0 library supporting ARP lookups on Windows and Linux to find the MAC address corresponding to an IP address.</PackageDescription>
     <PackageTags>arp;mac;mac-address;arp-cache;ip;ip-address;hardware-address;physical-address;linux</PackageTags>
-    <PackageIconUrl>https://github.com/georg-jung/ArpLookup/blob/master/doc/logo-nuget.png?raw=true</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +26,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../doc/logo-nuget.png" Pack="true" PackagePath="/icon.png" />
   </ItemGroup>
 
 </Project>
