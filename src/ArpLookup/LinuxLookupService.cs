@@ -29,6 +29,26 @@ namespace ArpLookup
         /// </summary>
         /// <param name="ip">The <see cref="IPAddress"/> to ping and look for.</param>
         /// <param name="timeout">The duration to wait for an answer to the ping.</param>
+        /// <returns>A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
+        /// could not be found in the ARP cache after the ping completed.</returns>
+        public static PhysicalAddress? PingThenTryReadFromArpTable(IPAddress ip, TimeSpan timeout)
+        {
+            if (!IsSupported)
+            {
+                throw new PlatformNotSupportedException();
+            }
+
+            using var ping = new Ping();
+            var reply = ping.Send(ip, (int)timeout.TotalMilliseconds);
+            return TryReadFromArpTable(ip);
+        }
+
+        /// <summary>
+        /// Pings the given <see cref="IPAddress"/> and waits for an answer for up to the specified timeout duration.
+        /// Afterwards tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to ping and look for.</param>
+        /// <param name="timeout">The duration to wait for an answer to the ping.</param>
         /// <returns>A <see cref="Task{PhysicalAddress}"/> representing the result of the asynchronous operation:
         /// A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
         /// could not be found in the ARP cache after the ping completed.</returns>
@@ -42,6 +62,23 @@ namespace ArpLookup
             using var ping = new Ping();
             var reply = await ping.SendPingAsync(ip, (int)timeout.TotalMilliseconds).ConfigureAwait(false);
             return await TryReadFromArpTableAsync(ip).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to look for.</param>
+        /// <returns>A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if
+        /// the <see cref="IPAddress"/> could not be found in the ARP cache.</returns>
+        public static PhysicalAddress? TryReadFromArpTable(IPAddress ip)
+        {
+            if (!IsSupported)
+            {
+                throw new PlatformNotSupportedException();
+            }
+
+            using var arpFile = new FileStream(ArpTablePath, FileMode.Open, FileAccess.Read);
+            return ParseProcNetArp(arpFile, ip);
         }
 
         /// <summary>
@@ -62,70 +99,23 @@ namespace ArpLookup
             return await ParseProcNetArpAsync(arpFile, ip).ConfigureAwait(false);
         }
 
-        private static async Task<PhysicalAddress?> ParseProcNetArpAsync(Stream content, IPAddress ip)
+        private static PhysicalAddress? ParseIfMatch(string line, IPAddress ip)
         {
-            using var reader = new StreamReader(content);
-            await reader.ReadLineAsync().ConfigureAwait(false); // first line is header, skip
-            while (!reader.EndOfStream)
+            var m = LineRegex.Match(line);
+            if (!m.Success || m.Groups.Count != 3)
             {
-                var line = await reader.ReadLineAsync().ConfigureAwait(false);
-                if (string.IsNullOrWhiteSpace(line))
-                {
-                    return null;
-                }
-
-                try
-                {
-                    var mac = ParseIfMatch(line, ip);
-                    if (mac != null)
-                    {
-                        return mac;
-                    }
-                }
-                catch (FormatException)
-                {
-                    throw new PlatformNotSupportedException();
-                }
+                throw new FormatException($"The given line '{line}' was not in the expected /proc/net/arp format.");
             }
 
-            return null;
-        }
-
-        /// <summary>
-        /// Pings the given <see cref="IPAddress"/> and waits for an answer for up to the specified timeout duration.
-        /// Afterwards tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
-        /// </summary>
-        /// <param name="ip">The <see cref="IPAddress"/> to ping and look for.</param>
-        /// <param name="timeout">The duration to wait for an answer to the ping.</param>
-        /// <returns>A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
-        /// could not be found in the ARP cache after the ping completed.</returns>
-        public static PhysicalAddress? PingThenTryReadFromArpTable(IPAddress ip, TimeSpan timeout)
-        {
-            if (!IsSupported)
+            var tableIpStr = m.Groups[1].Value;
+            var tableMacStr = m.Groups[2].Value;
+            var tableIp = IPAddress.Parse(tableIpStr);
+            if (!tableIp.Equals(ip))
             {
-                throw new PlatformNotSupportedException();
+                return null;
             }
 
-            using var ping = new Ping();
-            var reply = ping.Send(ip, (int)timeout.TotalMilliseconds);
-            return TryReadFromArpTable(ip);
-        }
-
-        /// <summary>
-        /// Tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
-        /// </summary>
-        /// <param name="ip">The <see cref="IPAddress"/> to look for.</param>
-        /// <returns>A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if
-        /// the <see cref="IPAddress"/> could not be found in the ARP cache.</returns>
-        public static PhysicalAddress? TryReadFromArpTable(IPAddress ip)
-        {
-            if (!IsSupported)
-            {
-                throw new PlatformNotSupportedException();
-            }
-
-            using var arpFile = new FileStream(ArpTablePath, FileMode.Open, FileAccess.Read);
-            return ParseProcNetArp(arpFile, ip);
+            return tableMacStr.ParseMacAddress();
         }
 
         private static PhysicalAddress? ParseProcNetArp(Stream content, IPAddress ip)
@@ -157,23 +147,33 @@ namespace ArpLookup
             return null;
         }
 
-        private static PhysicalAddress? ParseIfMatch(string line, IPAddress ip)
+        private static async Task<PhysicalAddress?> ParseProcNetArpAsync(Stream content, IPAddress ip)
         {
-            var m = LineRegex.Match(line);
-            if (!m.Success || m.Groups.Count != 3)
+            using var reader = new StreamReader(content);
+            await reader.ReadLineAsync().ConfigureAwait(false); // first line is header, skip
+            while (!reader.EndOfStream)
             {
-                throw new FormatException($"The given line '{line}' was not in the expected /proc/net/arp format.");
+                var line = await reader.ReadLineAsync().ConfigureAwait(false);
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    return null;
+                }
+
+                try
+                {
+                    var mac = ParseIfMatch(line, ip);
+                    if (mac != null)
+                    {
+                        return mac;
+                    }
+                }
+                catch (FormatException)
+                {
+                    throw new PlatformNotSupportedException();
+                }
             }
 
-            var tableIpStr = m.Groups[1].Value;
-            var tableMacStr = m.Groups[2].Value;
-            var tableIp = IPAddress.Parse(tableIpStr);
-            if (!tableIp.Equals(ip))
-            {
-                return null;
-            }
-
-            return tableMacStr.ParseMacAddress();
+            return null;
         }
     }
 }
