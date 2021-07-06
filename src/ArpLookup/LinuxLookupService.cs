@@ -17,24 +17,23 @@ namespace ArpLookup
 
         public static bool IsSupported => PlatformHelpers.IsLinux() && File.Exists(ArpTablePath);
 
-        public static async Task<PhysicalAddress> PingThenTryReadFromArpTable(IPAddress ip, TimeSpan timeout)
+        #region "Asynchronous implementations"
+        public static async Task<PhysicalAddress> PingThenTryReadFromArpTableAsync(IPAddress ip, TimeSpan timeout)
         {
-            if (!IsSupported)
-                throw new PlatformNotSupportedException();
+            if (!IsSupported) throw new PlatformNotSupportedException();
             using var ping = new Ping();
             var reply = await ping.SendPingAsync(ip, (int)timeout.TotalMilliseconds).ConfigureAwait(false);
-            return await TryReadFromArpTable(ip).ConfigureAwait(false);
+            return await TryReadFromArpTableAsync(ip).ConfigureAwait(false);
         }
 
-        public static async Task<PhysicalAddress> TryReadFromArpTable(IPAddress ip)
+        public static async Task<PhysicalAddress> TryReadFromArpTableAsync(IPAddress ip)
         {
-            if (!IsSupported)
-                throw new PlatformNotSupportedException();
+            if (!IsSupported) throw new PlatformNotSupportedException();
             using var arpFile = new FileStream(ArpTablePath, FileMode.Open, FileAccess.Read);
-            return await ParseProcNetArp(arpFile, ip).ConfigureAwait(false);
+            return await ParseProcNetArpAsync(arpFile, ip).ConfigureAwait(false);
         }
 
-        private static async Task<PhysicalAddress> ParseProcNetArp(Stream content, IPAddress ip)
+        private static async Task<PhysicalAddress> ParseProcNetArpAsync(Stream content, IPAddress ip)
         {
             using var reader = new StreamReader(content);
             await reader.ReadLineAsync().ConfigureAwait(false); // first line is header, skip
@@ -56,6 +55,46 @@ namespace ArpLookup
             }
             return null;
         }
+        #endregion 
+        #region "Synchronous implementations"
+        public static PhysicalAddress PingThenTryReadFromArpTable(IPAddress ip, TimeSpan timeout)
+        {
+            if (!IsSupported) throw new PlatformNotSupportedException();
+            using var ping = new Ping();
+            var reply = ping.Send(ip, (int)timeout.TotalMilliseconds);
+            return TryReadFromArpTable(ip);
+        }
+
+        public static PhysicalAddress TryReadFromArpTable(IPAddress ip)
+        {
+            if (!IsSupported) throw new PlatformNotSupportedException();
+            using var arpFile = new FileStream(ArpTablePath, FileMode.Open, FileAccess.Read);
+            return ParseProcNetArp(arpFile, ip);
+        }
+
+        private static PhysicalAddress ParseProcNetArp(Stream content, IPAddress ip)
+        {
+            using var reader = new StreamReader(content);
+            reader.ReadLine(); // first line is header, skip
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(line))
+                    return null;
+                try
+                {
+                    var mac = ParseIfMatch(line, ip);
+                    if (mac != null)
+                        return mac;
+                }
+                catch (FormatException)
+                {
+                    throw new PlatformNotSupportedException(); ;
+                }
+            }
+            return null;
+        }
+    #endregion 
 
         private static PhysicalAddress ParseIfMatch(string line, IPAddress ip)
         {

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>ArpLookup</PackageId>
+    <Authors>Georg Jung, Henrik Sozzi</Authors>
   </PropertyGroup>
 
   <PropertyGroup>
