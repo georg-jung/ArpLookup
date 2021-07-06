@@ -30,7 +30,7 @@ namespace ArpLookup
         /// </summary>
         /// <param name="ip">The IP address to look the mac address up for.</param>
         /// <returns>The mac address if found, null otherwise.</returns>
-        public static async Task<PhysicalAddress> LookupAsync(IPAddress ip)
+        public static async Task<PhysicalAddress?> LookupAsync(IPAddress ip)
         {
             if (WindowsLookupService.IsSupported)
             {
@@ -59,7 +59,7 @@ namespace ArpLookup
         /// </summary>
         /// <param name="ip">The IP address to look the mac address up for.</param>
         /// <returns>The mac address if found, null otherwise.</returns>
-        public static PhysicalAddress Lookup(IPAddress ip)
+        public static PhysicalAddress? Lookup(IPAddress ip)
         {
             if (WindowsLookupService.IsSupported)
             {
