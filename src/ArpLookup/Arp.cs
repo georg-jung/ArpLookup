@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -7,9 +7,19 @@ using System.Threading.Tasks;
 
 namespace ArpLookup
 {
+    /// <summary>
+    /// Provides ARP lookup functionality (IP address to MAC/Hardware address translation) on Windows and Linux platforms.
+    /// </summary>
     public static class Arp
     {
+        /// <summary>
+        /// Gets a value indicating whether the ARP lookup functionality is supported on the current plattform.
+        /// </summary>
         public static bool IsSupported => WindowsLookupService.IsSupported || LinuxLookupService.IsSupported;
+
+        /// <summary>
+        /// Gets or sets the timeout for pings that are performed on Linux platforms, if an IP address can not be found in the ARP table right away. Has no effect on other platforms.
+        /// </summary>
         public static TimeSpan LinuxPingTimeout { get; set; } = TimeSpan.FromMilliseconds(750);
 
         /// <summary>

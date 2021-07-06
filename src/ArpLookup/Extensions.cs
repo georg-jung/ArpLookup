@@ -8,6 +8,11 @@ namespace ArpLookup
 {
     internal static class Extensions
     {
+        /// <summary>
+        /// Parses string representations of physical addresses. Supports : as well as - as separator.
+        /// </summary>
+        /// <param name="mac">String representation of a physical address.</param>
+        /// <returns>A <see cref="PhysicalAddress"/> instance that represents the given string. Throws if parsing fails.</returns>
         public static PhysicalAddress ParseMacAddress(this string mac)
         {
             var macString = mac?.Replace(":", "-")?.ToUpper(CultureInfo.InvariantCulture) ?? throw new ArgumentNullException(nameof(mac));
