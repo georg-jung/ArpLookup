@@ -24,13 +24,14 @@ This is a simple .Net Standard 2.0 library supporting ARP lookups on Windows and
 
 ## Usage
 
-This library currently provides one single, simple to use function:
+This library currently provides one single, simple to use function (once sync, once async; only truly async on Linux, see below):
 
 ```C#
 using System.Net.NetworkInformation;
 using ArpLookup;
 
 // ...
+PhysicalAddress mac = Arp.Lookup(IPAddress.Parse("1.2.3.4"));
 
 PhysicalAddress mac = await Arp.LookupAsync(IPAddress.Parse("1.2.3.4"));
 ```
