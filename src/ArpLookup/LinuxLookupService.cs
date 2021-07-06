@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -10,14 +10,29 @@ using System.Threading.Tasks;
 
 namespace ArpLookup
 {
+    /// <summary>
+    /// Provides the necessary implementations for ARP lookups on Linux platforms.
+    /// </summary>
     internal static class LinuxLookupService
     {
         private const string ArpTablePath = "/proc/net/arp";
         private static readonly Regex lineRegex = new Regex(@"^((?:[0-9]{1,3}\.){3}[0-9]{1,3})(?:\s+\w+){2}\s+((?:[0-9A-Fa-f]{2}[:-]){5}(?:[0-9A-Fa-f]{2}))");
 
+        /// <summary>
+        /// Gets a value indicating whether this class can be used on the current platform.
+        /// </summary>
         public static bool IsSupported => PlatformHelpers.IsLinux() && File.Exists(ArpTablePath);
 
         #region "Asynchronous implementations"
+        /// <summary>
+        /// Pings the given <see cref="IPAddress"/> and waits for an answer for up to the specified timeout duration.
+        /// Afterwards tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to ping and look for.</param>
+        /// <param name="timeout">The duration to wait for an answer to the ping.</param>
+        /// <returns>A <see cref="Task{PhysicalAddress}"/> representing the result of the asynchronous operation:
+        /// A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
+        /// could not be found in the ARP cache after the ping completed.</returns>
         public static async Task<PhysicalAddress?> PingThenTryReadFromArpTableAsync(IPAddress ip, TimeSpan timeout)
         {
             if (!IsSupported) throw new PlatformNotSupportedException();
@@ -26,6 +41,13 @@ namespace ArpLookup
             return await TryReadFromArpTableAsync(ip).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to look for.</param>
+        /// <returns>A <see cref="Task{PhysicalAddress}"/> representing the result of the asynchronous operation:
+        /// A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
+        /// could not be found in the ARP cache.</returns>
         public static async Task<PhysicalAddress?> TryReadFromArpTableAsync(IPAddress ip)
         {
             if (!IsSupported) throw new PlatformNotSupportedException();
@@ -59,6 +81,14 @@ namespace ArpLookup
         #endregion
 
         #region "Synchronous implementations"
+        /// <summary>
+        /// Pings the given <see cref="IPAddress"/> and waits for an answer for up to the specified timeout duration.
+        /// Afterwards tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to ping and look for.</param>
+        /// <param name="timeout">The duration to wait for an answer to the ping.</param>
+        /// <returns>A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
+        /// could not be found in the ARP cache after the ping completed.</returns>
         public static PhysicalAddress? PingThenTryReadFromArpTable(IPAddress ip, TimeSpan timeout)
         {
             if (!IsSupported) throw new PlatformNotSupportedException();
@@ -67,6 +97,12 @@ namespace ArpLookup
             return TryReadFromArpTable(ip);
         }
 
+        /// <summary>
+        /// Tries to find an entry for the given <see cref="IPAddress"/> in the ARP table/local ARP cache.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to look for.</param>
+        /// <returns>A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if
+        /// the <see cref="IPAddress"/> could not be found in the ARP cache.</returns>
         public static PhysicalAddress? TryReadFromArpTable(IPAddress ip)
         {
             if (!IsSupported) throw new PlatformNotSupportedException();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -10,15 +10,23 @@ using System.Threading.Tasks;
 
 namespace ArpLookup
 {
+    /// <summary>
+    /// Provides the necessary implementations for ARP lookups on Windows platforms.
+    /// </summary>
     internal static class WindowsLookupService
     {
+        /// <summary>
+        /// Gets a value indicating whether this class can be used on the current platform.
+        /// </summary>
         public static bool IsSupported => PlatformHelpers.IsWindows();
 
         // based on https://github.com/nikeee/wake-on-lan/blob/5bdcecc/src/WakeOnLan/ArpRequest.cs
         /// <summary>
-        /// Call ApHlpApi.SendARP to lookup the mac address on windows-based systems.
+        /// Call IpHlpApi.SendARP to lookup the mac address on windows-based systems.
         /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to pass to the Win32 API.</param>
         /// <exception cref="Win32Exception">If IpHlpApi.SendARP returns non-zero.</exception>
+        /// <returns>A <see cref="PhysicalAddress"/> instance that represents the address found by IpHlpApi.SendARP.</returns>
         public static PhysicalAddress Lookup(IPAddress ip)
         {
             if (!IsSupported)
