@@ -2,10 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
     <PackageId>ArpLookup</PackageId>
-    <Authors>Georg Jung</Authors>
-    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,17 +13,7 @@
     <PackageTags>arp;mac;mac-address;arp-cache;ip;ip-address;hardware-address;physical-address;linux</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="../../doc/logo-nuget.png" Pack="true" PackagePath="/icon.png" />
