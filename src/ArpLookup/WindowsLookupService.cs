@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -20,7 +20,6 @@ namespace ArpLookup
         /// </summary>
         public static bool IsSupported => PlatformHelpers.IsWindows();
 
-        // based on https://github.com/nikeee/wake-on-lan/blob/5bdcecc/src/WakeOnLan/ArpRequest.cs
         /// <summary>
         /// Call IpHlpApi.SendARP to lookup the mac address on windows-based systems.
         /// </summary>
@@ -29,12 +28,14 @@ namespace ArpLookup
         /// <returns>A <see cref="PhysicalAddress"/> instance that represents the address found by IpHlpApi.SendARP.</returns>
         public static PhysicalAddress Lookup(IPAddress ip)
         {
+            _ = ip ?? throw new ArgumentNullException(nameof(ip));
             if (!IsSupported)
+            {
                 throw new PlatformNotSupportedException();
-            if (ip == null)
-                throw new ArgumentNullException(nameof(ip));
+            }
 
-            int destIp = BitConverter.ToInt32(ip.GetAddressBytes(), 0);
+            // based on https://github.com/nikeee/wake-on-lan/blob/5bdcecc/src/WakeOnLan/ArpRequest.cs
+            var destIp = BitConverter.ToInt32(ip.GetAddressBytes(), 0);
 
             var addr = new byte[6];
             var len = addr.Length;
@@ -42,7 +43,10 @@ namespace ArpLookup
             var res = NativeMethods.SendARP(destIp, 0, addr, ref len);
 
             if (res == 0)
+            {
                 return new PhysicalAddress(addr);
+            }
+
             throw new Win32Exception(res);
         }
 
