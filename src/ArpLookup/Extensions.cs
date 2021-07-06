@@ -6,6 +6,9 @@ using System.Text;
 
 namespace ArpLookup
 {
+    /// <summary>
+    /// Provides simple static helper functions for internal usage as Extensions.
+    /// </summary>
     internal static class Extensions
     {
         /// <summary>
