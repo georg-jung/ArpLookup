@@ -37,7 +37,7 @@ namespace ArpLookup
                 return new PhysicalAddress(addr);
             throw new Win32Exception(res);
         }
-        
+
         // based on https://github.com/nikeee/wake-on-lan/blob/4dfa0fd/src/WakeOnLan/NativeMethods.cs
         private static class NativeMethods
         {

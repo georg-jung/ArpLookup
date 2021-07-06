@@ -50,12 +50,14 @@ namespace ArpLookup
                 }
                 catch (FormatException)
                 {
-                    throw new PlatformNotSupportedException(); ;
+                    throw new PlatformNotSupportedException();
                 }
             }
+
             return null;
         }
-        #endregion 
+        #endregion
+
         #region "Synchronous implementations"
         public static PhysicalAddress PingThenTryReadFromArpTable(IPAddress ip, TimeSpan timeout)
         {
@@ -89,9 +91,10 @@ namespace ArpLookup
                 }
                 catch (FormatException)
                 {
-                    throw new PlatformNotSupportedException(); ;
+                    throw new PlatformNotSupportedException();
                 }
             }
+
             return null;
         }
     #endregion 

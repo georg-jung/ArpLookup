@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -33,13 +33,21 @@ namespace ArpLookup
         public static async Task<PhysicalAddress> LookupAsync(IPAddress ip)
         {
             if (WindowsLookupService.IsSupported)
+            {
                 return WindowsLookupService.Lookup(ip);
+            }
+
             if (LinuxLookupService.IsSupported)
             {
                 var mac = await LinuxLookupService.TryReadFromArpTableAsync(ip).ConfigureAwait(false);
-                if (mac != null) return mac;
+                if (mac != null)
+                {
+                    return mac;
+                }
+
                 return await LinuxLookupService.PingThenTryReadFromArpTableAsync(ip, LinuxPingTimeout).ConfigureAwait(false);
             }
+
             throw new PlatformNotSupportedException();
         }
 
@@ -54,13 +62,21 @@ namespace ArpLookup
         public static PhysicalAddress Lookup(IPAddress ip)
         {
             if (WindowsLookupService.IsSupported)
+            {
                 return WindowsLookupService.Lookup(ip);
+            }
+
             if (LinuxLookupService.IsSupported)
             {
                 var mac = LinuxLookupService.TryReadFromArpTable(ip);
-                if (mac != null) return mac;
+                if (mac != null)
+                {
+                    return mac;
+                }
+
                 return LinuxLookupService.PingThenTryReadFromArpTable(ip, LinuxPingTimeout);
             }
+
             throw new PlatformNotSupportedException();
         }
     }
