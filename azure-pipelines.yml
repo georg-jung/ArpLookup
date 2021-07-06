@@ -3,39 +3,25 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
-trigger:
-- master
-
 pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  BuildConfiguration: 'Release'
 
 steps:
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   inputs:
-    restoreSolution: '$(solution)'
+    command: 'build'
+    arguments: '-c $(BuildConfiguration) /p:ContinuousIntegrationBuild=true'
 
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'test'
-    arguments: '--configuration Release'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    arguments: '-c Release --output $(Build.ArtifactStagingDirectory)/ArpLookup-publish'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'pack'
-    arguments: '-c Release --output $(Build.ArtifactStagingDirectory)/ArpLookup-nupkg'
+    command: pack
+    nobuild: true
+    configuration: $(BuildConfiguration)
+    packDirectory: $(Build.ArtifactStagingDirectory)/Packages
 
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)'
-  
