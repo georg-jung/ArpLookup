@@ -18,8 +18,8 @@ This is a simple .Net Standard 2.0 library providing `Lookup` and `LookupAsync` 
 ## Download
 
 * [NuGet Package](https://www.nuget.org/packages/ArpLookup/)
-  * `PM> Install-Package ArpLookup`
-* [GitHub Releases](https://github.com/georg-jung/ArpLookup/releases/latest) for the zipped DLL or a nupkg file.
+  * `PM> Install-Package ArpLookup` or `dotnet add package ArpLookup`
+* [GitHub Releases](https://github.com/georg-jung/ArpLookup/releases/latest) for the `.nupkg` and `.snupkg` files.
 
 ## Usage
 
