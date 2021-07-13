@@ -8,7 +8,6 @@
   </a>
 </p>
 
-
 # ArpLookup
 
 [![Build Status](https://dev.azure.com/georg-jung/ArpLookup/_apis/build/status/georg-jung.ArpLookup?branchName=master)](https://dev.azure.com/georg-jung/ArpLookup/_build/latest?definitionId=1&branchName=master)
@@ -31,13 +30,14 @@ using System.Net.NetworkInformation;
 using ArpLookup;
 
 // ...
+
 PhysicalAddress mac = Arp.Lookup(IPAddress.Parse("1.2.3.4"));
 
 PhysicalAddress mac = await Arp.LookupAsync(IPAddress.Parse("1.2.3.4"));
 ```
 
-
 To detect if the current platform is supported, check as follows. Lookups on unsupported platforms throw `PlatformNotSupportedException`s.
+
 ```C#
 var linuxOrWindows = Arp.IsSupported;
 ```
