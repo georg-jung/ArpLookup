@@ -13,7 +13,7 @@
 [![Build Status](https://dev.azure.com/georg-jung/ArpLookup/_apis/build/status/georg-jung.ArpLookup?branchName=master)](https://dev.azure.com/georg-jung/ArpLookup/_build/latest?definitionId=1&branchName=master)
 [![NuGet version (ArpLookup)](https://img.shields.io/nuget/v/ArpLookup.svg?style=flat)](https://www.nuget.org/packages/ArpLookup/)
 
-This is a simple .Net Standard 2.0 library supporting ARP lookups on Windows and Linux to find the MAC address corresponding to an IP address.
+This is a simple .Net Standard 2.0 library providing `Lookup` and `LookupAsync` methods to find the MAC address corresponding to an IP address on Windows and Linux.
 
 ## Download
 

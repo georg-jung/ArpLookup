@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/georg-jung/ArpLookup</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageDescription>A .Net Standard 2.0 library supporting ARP lookups on Windows and Linux to find the MAC address corresponding to an IP address.</PackageDescription>
+    <PackageDescription>Provides Lookup and LookupAsync methods to find the MAC address corresponding to an IP address on Windows and Linux.</PackageDescription>
     <PackageTags>arp;mac;mac-address;arp-cache;ip;ip-address;hardware-address;physical-address;linux</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
