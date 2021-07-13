@@ -65,7 +65,3 @@ Arp.LinuxPingTimeout = TimeSpan.FromMilliseconds(125);
   * [WSL 2](https://github.com/Microsoft/WSL/issues/2279)
 
 Note that the used method does not work in WSL 1 and might not work on every Linux distribution. Checking the `Arp.IsSupported` property accounts for this (though it does not check if you are actually allowed to access `/proc/net/arp`). In WSL 2 this library will work as on most "real" Linux distributions as [this issue describes](https://github.com/Microsoft/WSL/issues/2279). While I did not test this library on Android/Xamarin I have read in different places that reading `/proc/net/arp` is possible (given the right permissions).
-
-## Credits
-
-The Windows version is based on [nikeee/wake-on-lan](https://github.com/nikeee/wake-on-lan).
