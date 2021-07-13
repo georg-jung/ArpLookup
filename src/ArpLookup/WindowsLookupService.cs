@@ -69,11 +69,11 @@ namespace ArpLookup
             /// <para><see href="https://docs.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-sendarp#parameters">Read more on docs.microsoft.com</see>.</para>
             /// </param>
             /// <returns>
-            /// <para>If the function succeeds, the return value is NO_ERROR. If the function fails, the return value is one of the following error codes. </para>
+            /// <para>If the function succeeds, the return value is NO_ERROR. If the function fails, the return value is one of the following error codes.</para>
             /// <para>This doc was truncated.</para>
             /// </returns>
             /// <remarks>
-            /// <para><see href="https://docs.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-sendarp">Learn more about this API from docs.microsoft.com.</see></para>
+            /// <para><see href="https://docs.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-sendarp">Learn more about this API from docs.microsoft.com</see>.</para>
             /// </remarks>
             [DllImport("IPHlpApi", ExactSpelling = true)]
             [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
