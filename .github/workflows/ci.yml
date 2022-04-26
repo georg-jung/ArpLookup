@@ -1,3 +1,5 @@
+name: Build and Pack
+
 on:
   push:
   pull_request:
@@ -21,5 +23,5 @@ jobs:
       with:
         name: nupkg
         path: |
-          **/*.nupkg
-          **/*.snupkg
+          bin/Packages/**/*.nupkg
+          bin/Packages/**/*.snupkg
