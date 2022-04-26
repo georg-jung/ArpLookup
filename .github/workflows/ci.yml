@@ -1,0 +1,21 @@
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Build
+      run: dotnet build -c Release /p:ContinuousIntegrationBuild=true
+    - name: Pack
+      run: dotnet pack -c Release --no-build
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: nupkg
+        path: |
+          **/*.nupkg
+          **/*.snupkg
