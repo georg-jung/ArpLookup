@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>ArpLookup</PackageId>
     <Authors>Georg Jung, Henrik Sozzi</Authors>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>2.0.3</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -19,10 +21,5 @@
   <ItemGroup>
     <None Include="../../doc/logo-nuget.png" Pack="true" PackagePath="/icon.png" />
   </ItemGroup>
-
-  <Sdk Name="Microsoft.DotNet.PackageValidation" Version="1.0.0-preview.5.21302.8" />
-  <PropertyGroup>
-    <PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion>
-  </PropertyGroup>
 
 </Project>
