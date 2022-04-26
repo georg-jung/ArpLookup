@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>ArpLookup</PackageId>
     <Authors>Georg Jung, Henrik Sozzi</Authors>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>2.0.3</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <PropertyGroup>
