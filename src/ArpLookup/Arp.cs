@@ -52,8 +52,7 @@ namespace ArpLookup
                     return mac;
                 }
 
-                return await LinuxLookupService.TryReadFromIpAddrShowAsync(ip);
-
+                return LinuxLookupService.TryReadFromIpAddrShow(ip);
             }
 
             throw new PlatformNotSupportedException();
