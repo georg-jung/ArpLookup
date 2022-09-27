@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -97,6 +98,104 @@ namespace ArpLookup
 
             using var arpFile = new FileStream(ArpTablePath, FileMode.Open, FileAccess.Read);
             return await ParseProcNetArpAsync(arpFile, ip).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Tries to find an entry for the given <see cref="IPAddress"/> in the output of ip addr show.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to look for.</param>
+        /// <returns>A <see cref="Task{PhysicalAddress}"/> representing the result of the asynchronous operation:
+        /// A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
+        /// could not be found.</returns>
+        public static PhysicalAddress? TryReadFromIpAddrShow(IPAddress ip)
+        {
+            if (!IsSupported)
+            {
+                throw new PlatformNotSupportedException();
+            }
+
+            var command = $"ip addr show | grep ${ip} -B 1 | head -n 1 | cut -d ' ' -f6";
+            var result = "";
+
+            using (var proc = new Process())
+            {
+                proc.StartInfo.FileName = "/bin/bash";
+                proc.StartInfo.Arguments = "-c \" " + command + " \"";
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.RedirectStandardError = true;
+                proc.Start();
+
+                result += proc.StandardOutput.ReadToEnd();
+                result += proc.StandardError.ReadToEnd();
+
+                proc.WaitForExit();
+
+                try
+                {
+                    var macStr = result.Trim();
+
+                    if (macStr != "" && macStr.Length == 17)
+                    {
+                        return macStr.ParseMacAddress();
+                    }
+                }
+                catch (FormatException)
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Tries to find an entry for the given <see cref="IPAddress"/> in the output of ip addr show.
+        /// </summary>
+        /// <param name="ip">The <see cref="IPAddress"/> to look for.</param>
+        /// <returns>A <see cref="Task{PhysicalAddress}"/> representing the result of the asynchronous operation:
+        /// A <see cref="PhysicalAddress"/> for the given <see cref="IPAddress"/> or null if the <see cref="IPAddress"/>
+        /// could not be found.</returns>
+        public static async Task<PhysicalAddress?> TryReadFromIpAddrShowAsync(IPAddress ip)
+        {
+            if (!IsSupported)
+            {
+                throw new PlatformNotSupportedException();
+            }
+
+            var command = $"ip addr show | grep ${ip} -B 1 | head -n 1 | cut -d ' ' -f6";
+            var result = "";
+
+            using (var proc = new Process())
+            {
+                proc.StartInfo.FileName = "/bin/bash";
+                proc.StartInfo.Arguments = "-c \" " + command + " \"";
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.RedirectStandardError = true;
+                proc.Start();
+
+                result += proc.StandardOutput.ReadToEnd();
+                result += proc.StandardError.ReadToEnd();
+
+                await proc.WaitForExitAsync();
+
+                try
+                {
+                    var macStr = result.Trim();
+
+                    if (macStr != "" && macStr.Length == 17)
+                    {
+                        return macStr.ParseMacAddress();
+                    }
+                }
+                catch (FormatException)
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                return null;
+            }
         }
 
         private static PhysicalAddress? ParseIfMatch(string line, IPAddress ip)

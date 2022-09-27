@@ -48,6 +48,7 @@ On Windows an API call to IpHlpApi.SendARP is used. Beware that this implementat
 
 On Linux the `/proc/net/arp` file, which contains system's the arp cache, is read. If the IP address is found there the corresponding MAC address is returned directly.
 Otherwise, an ICMP ping is sent to the given IP address and the arp cache lookup is repeated afterwards. This implementation uses async file IO and the framework's async ping implementation.
+As a last resort, the output of the command "ip addr show" is parsed.
 
 Per default, the library waits for ping responses for up to 750ms on Linux platforms. Technically, the responses are not required, as the arp protocol and the arp cache have nothing to do with the pings. Rather, the pings are an easy way to force the OS to figure out and provide the information we are looking for. I did not do extensive tests how long is reasonable to wait to be quite sure, the arp cache is updated. 750ms should be much more than needed in many cases - it is more of the safe option. Note that if you do recieve a ping response, the wait might be much shorter. The timeout gets relevant if the host is not available/no ping answer is received. If you want to request many addresses or are facing other time-limiting aspects, you may want to reconfigure this default:
 
@@ -60,6 +61,7 @@ Arp.LinuxPingTimeout = TimeSpan.FromMilliseconds(125);
 * Windows (tested)
 * Linux
   * Debian (tested)
+  * Ubuntu (tested) 
   * Android
   * **not** WSL 1 (tested)
   * [WSL 2](https://github.com/Microsoft/WSL/issues/2279)
