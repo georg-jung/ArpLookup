@@ -64,7 +64,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 ```
 
-List all NICs and there IPv4s and MAC addresses:
+List all NICs and their IPv4s and MAC addresses:
 
 ```csharp
 foreach (
