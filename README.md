@@ -67,10 +67,11 @@ using System.Net.NetworkInformation;
 List all NICs and there IPv4s and MAC addresses:
 
 ```csharp
-foreach(
+foreach (
     var nic in NetworkInterface
-    .GetAllNetworkInterfaces()
-    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+      .GetAllNetworkInterfaces()
+      .Where(nic => nic.OperationalStatus == OperationalStatus.Up
+                    && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
     )
 {
     var ips = nic.GetIPProperties().UnicastAddresses.Where(adr => adr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).Select(adr => adr.Address.ToString());
@@ -85,7 +86,8 @@ var ip = IPAddress.Parse("192.168.1.2");
 
 var nic2 = NetworkInterface
     .GetAllNetworkInterfaces()
-    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+    .Where(nic => nic.OperationalStatus == OperationalStatus.Up
+                  && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
     .Where(nic => nic.GetIPProperties().UnicastAddresses.Any(adr => adr.Address.Equals(ip)))
     .FirstOrDefault();
 
