@@ -55,6 +55,43 @@ Per default, the library waits for ping responses for up to 750ms on Linux platf
 Arp.LinuxPingTimeout = TimeSpan.FromMilliseconds(125);
 ```
 
+## Local NIC's MAC addresses
+
+Note that this library was created to determine the MAC addresses of remote devices. Under certain circumstances, the Lookup or LookupAsync functions return the MAC addresses of local NICs as well. However, this behavior differs between different platforms. To lookup local MAC addresses, a library like this is not necessary, but existing APIs of .Net can be used:
+
+```csharp
+using System.Net;
+using System.Net.NetworkInformation;
+```
+
+List all NICs and there IPv4s and MAC addresses:
+
+```csharp
+foreach(
+    var nic in NetworkInterface
+    .GetAllNetworkInterfaces()
+    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+    )
+{
+    var ips = nic.GetIPProperties().UnicastAddresses.Where(adr => adr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).Select(adr => adr.Address.ToString());
+    Console.WriteLine($"{string.Join(", ", ips)} {nic.GetPhysicalAddress()} {nic.Name}");
+}
+```
+
+Lookup one MAC address by IPv4 address:
+
+```csharp
+var ip = IPAddress.Parse("192.168.1.2");
+
+var nic2 = NetworkInterface
+    .GetAllNetworkInterfaces()
+    .Where(nic => nic.OperationalStatus == OperationalStatus.Up && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+    .Where(nic => nic.GetIPProperties().UnicastAddresses.Any(adr => adr.Address.Equals(ip)))
+    .FirstOrDefault();
+
+Console.WriteLine($"HWAddr for IP {ip} is {nic2?.GetPhysicalAddress()?.ToString() ?? "UNKNOWN"}");
+```
+
 ## Supported platforms
 
 * Windows (tested)
