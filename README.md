@@ -74,7 +74,9 @@ foreach (
                     && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
     )
 {
-    var ips = nic.GetIPProperties().UnicastAddresses.Where(adr => adr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork).Select(adr => adr.Address.ToString());
+    var ips = nic.GetIPProperties().UnicastAddresses
+        .Where(adr => adr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+        .Select(adr => adr.Address.ToString());
     Console.WriteLine($"{string.Join(", ", ips)} {nic.GetPhysicalAddress()} {nic.Name}");
 }
 ```
