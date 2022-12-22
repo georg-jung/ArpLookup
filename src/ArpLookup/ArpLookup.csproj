@@ -16,10 +16,12 @@
     <PackageTags>arp;mac;mac-address;arp-cache;ip;ip-address;hardware-address;physical-address;linux</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="../../doc/logo-nuget.png" Pack="true" PackagePath="/icon.png" />
+    <None Include="../../README.md" Pack="true" PackagePath="/README.md"/>
   </ItemGroup>
 
 </Project>
