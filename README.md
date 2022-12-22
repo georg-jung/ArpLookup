@@ -13,7 +13,7 @@
 [![Build Status](https://dev.azure.com/georg-jung/ArpLookup/_apis/build/status/georg-jung.ArpLookup?branchName=master)](https://dev.azure.com/georg-jung/ArpLookup/_build/latest?definitionId=1&branchName=master)
 [![NuGet version (ArpLookup)](https://img.shields.io/nuget/v/ArpLookup.svg?style=flat)](https://www.nuget.org/packages/ArpLookup/)
 
-This is a simple .Net Standard 2.0 library providing `Lookup` and `LookupAsync` methods to find the MAC address corresponding to an IP address on Windows and Linux.
+ArpLookup is a .Net Standard 2.0 library that provides `Lookup` and `LookupAsync` methods to find the MAC address corresponding to an IP address on Windows and Linux.
 
 This library is feature-complete according to the current planning. So no frequent updates are expected, although it is actively maintained.
 
@@ -27,7 +27,7 @@ This library is feature-complete according to the current planning. So no freque
 
 This library currently provides one single, simple to use function (once sync, once async; only truly async on Linux, see below):
 
-```C#
+```csharp
 using System.Net.NetworkInformation;
 using ArpLookup;
 
@@ -40,7 +40,7 @@ PhysicalAddress mac = await Arp.LookupAsync(IPAddress.Parse("1.2.3.4"));
 
 To detect if the current platform is supported, check as follows. Lookups on unsupported platforms throw `PlatformNotSupportedException`s.
 
-```C#
+```csharp
 var linuxOrWindows = Arp.IsSupported;
 ```
 
@@ -51,15 +51,15 @@ On Windows an API call to IpHlpApi.SendARP is used. Beware that this implementat
 On Linux the `/proc/net/arp` file, which contains system's the arp cache, is read. If the IP address is found there the corresponding MAC address is returned directly.
 Otherwise, an ICMP ping is sent to the given IP address and the arp cache lookup is repeated afterwards. This implementation uses async file IO and the framework's async ping implementation.
 
-Per default, the library waits for ping responses for up to 750ms on Linux platforms. Technically, the responses are not required, as the arp protocol and the arp cache have nothing to do with the pings. Rather, the pings are an easy way to force the OS to figure out and provide the information we are looking for. I did not do extensive tests how long is reasonable to wait to be quite sure, the arp cache is updated. 750ms should be much more than needed in many cases - it is more of the safe option. Note that if you do recieve a ping response, the wait might be much shorter. The timeout gets relevant if the host is not available/no ping answer is received. If you want to request many addresses or are facing other time-limiting aspects, you may want to reconfigure this default:
+By default, the library waits for ping responses for up to 750ms on Linux platforms. Technically, the responses are not required, as the arp protocol and the arp cache have nothing to do with the pings. Rather, the pings are an easy way to force the OS to figure out and provide the information we are looking for. I did not do extensive tests how long is reasonable to wait to be quite sure, the arp cache is updated. 750ms should be much more than needed in many cases - it is more of the safe option. Note that if you do recieve a ping response, the wait might be much shorter. The timeout comes into effect if the host is not available or does not respond to the ping. If you want to request many addresses or are facing other time-limiting aspects, you may want to reconfigure this default:
 
-```C#
+```csharp
 Arp.LinuxPingTimeout = TimeSpan.FromMilliseconds(125);
 ```
 
 ## Local NIC's MAC addresses
 
-Note that this library was created to determine the MAC addresses of remote devices. Under certain circumstances, the Lookup or LookupAsync functions return the MAC addresses of local NICs as well. However, this behavior differs between different platforms. To lookup local MAC addresses, a library like this is not necessary, but existing APIs of .Net can be used:
+Please note that this library was designed to determine the MAC addresses of remote devices. Under certain circumstances, the Lookup or LookupAsync function may return the MAC addresses of local NICs as well. However, this behavior varys across different platforms. To lookup local MAC addresses, a library like this is not necessary, but existing APIs of .Net can be used:
 
 ```csharp
 using System.Net;
