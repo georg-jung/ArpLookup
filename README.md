@@ -2,7 +2,7 @@
   <a href="https://www.nuget.org/packages/ArpLookup/">
     <img
       alt="ArpLookup"
-      src="https://github.com/georg-jung/ArpLookup/blob/master/doc/logo.svg"
+      src="https://raw.githubusercontent.com/georg-jung/ArpLookup/master/doc/logo.svg"
       width="100"
     />
   </a>
@@ -14,6 +14,8 @@
 [![NuGet version (ArpLookup)](https://img.shields.io/nuget/v/ArpLookup.svg?style=flat)](https://www.nuget.org/packages/ArpLookup/)
 
 This is a simple .Net Standard 2.0 library providing `Lookup` and `LookupAsync` methods to find the MAC address corresponding to an IP address on Windows and Linux.
+
+This library is feature-complete according to the current planning. So no frequent updates are expected, although it is actively maintained.
 
 ## Download
 
