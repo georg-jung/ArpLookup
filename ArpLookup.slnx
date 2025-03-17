@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+    <File Path="README.md" />
+    <File Path="stylecop.json" />
+    <File Path="version.json" />
+  </Folder>
+  <Project Path="src/ArpLookup/ArpLookup.csproj" />
+</Solution>
