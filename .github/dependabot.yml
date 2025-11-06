@@ -5,7 +5,15 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  groups:
+    all:
+      patterns:
+        - ".*"
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
     interval: daily
+  groups:
+    all:
+      patterns:
+        - ".*"
