@@ -21,6 +21,17 @@ jobs:
       id: nbgv
     - name: Build
       run: dotnet build -c Release /p:ContinuousIntegrationBuild=true
+
+    # Remove the html head with the logo from README for nupkg
+    - name: Clean README
+      run: |
+        # Assert the pattern exists (Fail hard if not found)
+        grep -q "^# ArpLookup" README.md || { echo "Error: Header not found in README"; exit 1; }
+        # -n: don't print lines by default
+        # /pattern/,$p: print from the matching line to the end ($)
+        sed -n '/# ArpLookup/,$p' README.md > README.tmp
+        mv README.tmp README.md
+
     - name: Pack
       run: dotnet pack -c Release --no-build
     - name: Upload Artifacts
