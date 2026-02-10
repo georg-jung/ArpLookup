@@ -32,6 +32,9 @@ jobs:
         sed -n '/# ArpLookup/,$p' README.md > README.tmp
         mv README.tmp README.md
 
+    - name: Test
+      run: dotnet run --project test/ArpLookup.Tests -c Release --no-build
+
     - name: Pack
       run: dotnet pack -c Release --no-build
     - name: Upload Artifacts

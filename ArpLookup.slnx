@@ -9,4 +9,5 @@
     <File Path="version.json" />
   </Folder>
   <Project Path="src/ArpLookup/ArpLookup.csproj" />
+  <Project Path="test/ArpLookup.Tests/ArpLookup.Tests.csproj" />
 </Solution>
