@@ -33,7 +33,13 @@ jobs:
         mv README.tmp README.md
 
     - name: Test
-      run: dotnet run --project test/ArpLookup.Tests -c Release --no-build
+      # --no-build leads to empty coverage
+      run: dotnet test -c Release --coverage --coverage-output cobertura.xml --coverage-output-format cobertura --results-directory .
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Pack
       run: dotnet pack -c Release --no-build
