@@ -24,7 +24,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers.Unstable" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
     <PackageReference Include="Nullable" PrivateAssets="all" />
   </ItemGroup>
