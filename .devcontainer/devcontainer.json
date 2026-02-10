@@ -25,7 +25,8 @@
 				"ms-dotnettools.csdevkit",
 				"EditorConfig.EditorConfig",
 				"pflannery.vscode-versionlens",
-				"DavidAnson.vscode-markdownlint"
+				"DavidAnson.vscode-markdownlint",
+				"github.vscode-github-actions"
 			]
 		}
 	}

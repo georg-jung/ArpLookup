@@ -7,6 +7,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+      contents: read
     timeout-minutes: 15
     steps:
     - name: Checkout
@@ -43,10 +48,17 @@ jobs:
 
     - name: Pack
       run: dotnet pack -c Release --no-build
+
     - name: Upload Artifacts
+      id: upload
       uses: actions/upload-artifact@v6
       with:
         name: nupkg
         path: |
           bin/Packages/**/*.nupkg
           bin/Packages/**/*.snupkg
+
+    - uses: actions/attest-build-provenance@v3
+      with:
+        subject-name: nupkg
+        subject-digest: sha256:${{ steps.upload.outputs.artifact-digest }}
