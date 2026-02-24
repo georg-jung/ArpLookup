@@ -22,7 +22,7 @@ jobs:
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.x # `global-json-file: global.json` wouldn't use the latestMinor with setup-dotnet@v4
-    - uses: dotnet/nbgv@v0.4
+    - uses: dotnet/nbgv@v0.5
       id: nbgv
     - name: Build
       run: dotnet build -c Release /p:ContinuousIntegrationBuild=true
