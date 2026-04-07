@@ -12,6 +12,8 @@ namespace ArpLookup.Tests;
 /// </summary>
 public class ArpSmokeTests
 {
+    private static readonly PhysicalAddress WindowsLoopbackNullAddress = new([0, 0, 0, 0, 0, 0]);
+
     [Test]
     public async Task IsSupported_ReturnsTrue_OnLinux()
     {
@@ -25,7 +27,9 @@ public class ArpSmokeTests
         var result = await Arp.LookupAsync(IPAddress.Loopback);
 
         // Loopback is not in the ARP table, so null is expected.
-        await Assert.That(result).IsNull();
+        await Assert.That(result)
+            .IsNull() // Linux
+            .Or.IsEqualTo(WindowsLoopbackNullAddress); // Windows
     }
 
     [Test]
@@ -33,7 +37,9 @@ public class ArpSmokeTests
     {
         var result = Arp.Lookup(IPAddress.Loopback);
 
-        await Assert.That(result).IsNull();
+        await Assert.That(result)
+            .IsNull() // Linux
+            .Or.IsEqualTo(WindowsLoopbackNullAddress); // Windows
     }
 
     [Test]
