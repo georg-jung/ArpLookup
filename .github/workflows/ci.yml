@@ -66,7 +66,7 @@ jobs:
           bin/Packages/**/*.nupkg
           bin/Packages/**/*.snupkg
 
-    - uses: actions/attest-build-provenance@v3
+    - uses: actions/attest-build-provenance@v4
       with:
         subject-name: nupkg
         subject-digest: sha256:${{ steps.upload.outputs.artifact-digest }}
