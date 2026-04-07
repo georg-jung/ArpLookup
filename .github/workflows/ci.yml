@@ -36,8 +36,7 @@ jobs:
           core.exportVariable('ACTIONS_RESULTS_URL', process.env['ACTIONS_RESULTS_URL']);
 
     - name: Test
-      # --no-build leads to empty coverage
-      run: dotnet test -c Release --coverage --coverage-output cobertura.xml --coverage-output-format cobertura --results-directory .
+      run: dotnet test --no-build -c Release --coverage --coverage-output cobertura.xml --coverage-output-format cobertura --results-directory .
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v6
