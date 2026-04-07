@@ -151,7 +151,12 @@ namespace ArpLookup
         {
             using var reader = new StreamReader(content);
             await reader.ReadLineAsync().ConfigureAwait(false); // first line is header, skip
-            while (!reader.EndOfStream)
+
+            /* CA2024: avoid StreamReader.EndOfStream in async methods; drive the loop via ReadLineAsync instead.
+             * ReadLineAsync returns null at EOF, which string.IsNullOrWhiteSpace already treats as a terminal condition.
+             * See https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2024.
+             */
+            while (true)
             {
                 var line = await reader.ReadLineAsync().ConfigureAwait(false);
                 if (string.IsNullOrWhiteSpace(line))
@@ -172,8 +177,6 @@ namespace ArpLookup
                     throw new PlatformNotSupportedException();
                 }
             }
-
-            return null;
         }
     }
 }
