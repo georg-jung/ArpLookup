@@ -55,7 +55,7 @@ jobs:
         mv README.tmp README.md
 
     - name: Pack
-      run: dotnet pack -c Release --no-build
+      run: dotnet pack -c Release --no-build -o ./artifacts
 
     - name: Upload Artifacts
       id: upload
@@ -63,10 +63,12 @@ jobs:
       with:
         name: nupkg
         path: |
-          bin/Packages/**/*.nupkg
-          bin/Packages/**/*.snupkg
+          ./artifacts/**/*.nupkg
+          ./artifacts/**/*.snupkg
 
-    - uses: actions/attest-build-provenance@v4
+    - uses: actions/attest@v4
+      if: github.ref_name == github.event.repository.default_branch || github.ref_type == 'tag'
       with:
-        subject-name: nupkg
-        subject-digest: sha256:${{ steps.upload.outputs.artifact-digest }}
+        subject-path: |
+          ./artifacts/*.nupkg
+          ./artifacts/*.snupkg
