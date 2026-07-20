@@ -23,7 +23,7 @@ jobs:
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.x # `global-json-file: global.json` wouldn't use the latestMinor with setup-dotnet@v4
     - uses: dotnet/nbgv@v0.5
@@ -64,7 +64,7 @@ jobs:
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.x # `global-json-file: global.json` wouldn't use the latestMinor with setup-dotnet@v4
     - uses: dotnet/nbgv@v0.5
